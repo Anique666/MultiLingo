@@ -6,6 +6,8 @@ from database import Base  # single Base shared with the engine
 class User(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True, index=True)
+    email = Column(String, unique=True, index=True)
+    hashed_password = Column(String)
     username = Column(String, unique=True, index=True)
     xp = Column(Integer, default=0)
     streak = Column(Integer, default=0)

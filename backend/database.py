@@ -11,6 +11,7 @@ from sqlalchemy.ext.asyncio import (
     async_sessionmaker,
 )
 from sqlalchemy.orm import declarative_base
+from sqlalchemy.pool import NullPool
 
 # ---------------------------------------------------------------------------
 # Database URL
@@ -19,13 +20,16 @@ DATABASE_URL = "sqlite+aiosqlite:///./multilingo.db"
 
 # ---------------------------------------------------------------------------
 # Engine
-# connect_args: check_same_thread=False is required for SQLite
-# echo=True emits SQL to stdout — flip to False in production
+# NullPool is the recommended pool class for SQLite+aiosqlite in async mode.
+# It creates a fresh connection per operation and closes it immediately,
+# preventing the connection-pool deadlocks that arise when the lifespan
+# handler holds connections while request handlers try to acquire new ones.
 # ---------------------------------------------------------------------------
 engine: AsyncEngine = create_async_engine(
     DATABASE_URL,
-    echo=True,
+    echo=False,
     connect_args={"check_same_thread": False},
+    poolclass=NullPool,
 )
 
 # ---------------------------------------------------------------------------

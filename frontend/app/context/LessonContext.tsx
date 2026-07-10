@@ -12,7 +12,7 @@ import React, {
 // Constants
 // ---------------------------------------------------------------------------
 
-const API_BASE = "http://127.0.0.1:8000";
+const API_BASE = "http://localhost:8000";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -113,8 +113,9 @@ export function LessonProvider({
                     `${API_BASE}/exercises/${exercise.id}/check`,
                     {
                         method: "POST",
+                        credentials: "include",
                         headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ user_id: state.userId, answer }),
+                        body: JSON.stringify({ answer }),
                     },
                 );
 
@@ -165,9 +166,9 @@ export function LessonProvider({
                 // Fire lesson-complete request without blocking the UI.
                 fetch(`${API_BASE}/lessons/${prev.lessonId}/complete`, {
                     method: "POST",
+                    credentials: "include",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
-                        user_id: prev.userId,
                         correct_count: prev.correctCount,
                         total_exercises: prev.exercises.length,
                     }),

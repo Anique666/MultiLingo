@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Star } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
 import SkillNode, {
   getUnitColorTokens,
   type SkillStatus,
@@ -39,7 +40,6 @@ type LegacyUnit = {
 
 type HomeTreeProps = {
   units?: HomeTreeUnit[];
-  userId?: number | string;
   onSelect?: (skillId: number | string) => void;
 };
 
@@ -227,10 +227,10 @@ function UnitPath({
 
 export default function HomeTree({
   units,
-  userId = 1,
   onSelect,
 }: HomeTreeProps) {
   const router = useRouter();
+  const { user } = useAuth();
   const [fetchedUnits, setFetchedUnits] = useState<HomeTreeUnit[]>([]);
   const renderedUnits = useMemo(
     () => (units ? units.map((unit) => ({
@@ -249,7 +249,10 @@ export default function HomeTree({
 
     async function fetchSkillTree() {
       try {
-        const response = await fetch(`http://localhost:8000/skills/tree/${userId}`);
+        if (!user) return;
+        const response = await fetch(`http://localhost:8000/skills/tree`, {
+          credentials: "include",
+        });
 
         if (!response.ok) {
           return;
@@ -272,7 +275,7 @@ export default function HomeTree({
     return () => {
       isMounted = false;
     };
-  }, [units, userId]);
+  }, [units, user]);
 
   const handleSelect = (skillId: number | string) => {
     if (onSelect) {

@@ -7,14 +7,23 @@ create_all). Routers are registered here.
 
 from contextlib import asynccontextmanager
 from typing import AsyncIterator
+import sys
+import asyncio
+
+if sys.platform == "win32":
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+
+
 from database import engine, Base, AsyncSessionLocal
 # Import models so their table definitions are registered on Base
 import models  # noqa: F401
-from routers import skills, exercises, lessons, users
+
+from routers import auth, skills, exercises, lessons, users, leaderboard
+from scripts.seed_data import seed_leaderboard_users
 
 
 async def seed_dev_data() -> None:
@@ -73,17 +82,7 @@ async def seed_dev_data() -> None:
                     )
                 )
 
-        if await session.get(models.User, 1) is None:
-            session.add(
-                models.User(
-                    id=1,
-                    username="demo",
-                    xp=0,
-                    streak=0,
-                    hearts=5,
-                    last_active=None,
-                )
-            )
+        await seed_leaderboard_users(session)
 
         if await session.get(models.Unit, 1) is None:
             session.add(
@@ -263,6 +262,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     """Create DB tables on startup; nothing special needed on shutdown."""
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+
     await seed_dev_data()
     yield
 
@@ -282,11 +282,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+
 # ---------------------------------------------------------------------------
 # Routers
 # ---------------------------------------------------------------------------
+app.include_router(auth.router)
 app.include_router(skills.router)
 app.include_router(exercises.router)
 app.include_router(lessons.router)
 app.include_router(users.router)
+app.include_router(leaderboard.router)
 

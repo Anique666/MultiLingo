@@ -4,7 +4,7 @@
   --color-background: #ffffff;
   --color-foreground: #171717;
 
-  /* Duolingo Brand Tokens */
+  /* MultiLingo Brand Tokens */
   --color-brand-green: #58CC02;
   --color-brand-green-dark: #58A700;
   --color-brand-red: #FF4B4B;
@@ -73,9 +73,19 @@
   .home-tree-mascot-float {
     animation: home-tree-mascot-float 2.8s ease-in-out infinite;
   }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 @keyframes skill-node-ring-pulse {
+
   0%,
   100% {
     outline-width: 0;
@@ -89,6 +99,7 @@
 }
 
 @keyframes home-tree-mascot-float {
+
   0%,
   100% {
     transform: translateY(0);

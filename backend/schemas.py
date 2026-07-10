@@ -6,7 +6,7 @@ Each ORM model gets:
   - A *Create* schema (for POST bodies — same as Base usually)
   - A *Read*  schema (includes id; returned from endpoints)
 
-The SkillTreeNode / UnitTreeResponse composites are used by GET /tree/{user_id}.
+The SkillTreeNode / UnitTreeResponse composites are used by GET /skills/tree.
 """
 
 from __future__ import annotations
@@ -25,6 +25,30 @@ _orm_config = ConfigDict(from_attributes=True)
 # User
 # ===========================================================================
 
+class AuthCredentialsBase(BaseModel):
+    email: str = Field(..., min_length=3, max_length=255)
+    password: str = Field(..., min_length=8, max_length=128)
+
+
+class AuthSignupRequest(AuthCredentialsBase):
+    username: str = Field(..., min_length=1, max_length=50)
+
+
+class AuthLoginRequest(AuthCredentialsBase):
+    pass
+
+
+class AuthCurrentUserResponse(BaseModel):
+    model_config = _orm_config
+
+    id: int
+    email: Optional[str] = None
+    username: str
+    xp: int = Field(..., ge=0)
+    streak: int = Field(..., ge=0)
+    hearts: int = Field(..., ge=0, le=5)
+    last_active: Optional[str] = None
+
 class UserBase(BaseModel):
     username: str = Field(..., min_length=1, max_length=50)
     xp: int = Field(default=0, ge=0)
@@ -40,6 +64,14 @@ class UserCreate(UserBase):
 class UserRead(UserBase):
     model_config = _orm_config
     id: int
+
+
+class LeaderboardUserRead(BaseModel):
+    model_config = _orm_config
+
+    id: int
+    username: str
+    xp: int
 
 
 # ===========================================================================
@@ -227,7 +259,6 @@ class LessonWithExercisesResponse(BaseModel):
 # ===========================================================================
 
 class CheckAnswerRequest(BaseModel):
-    user_id: int
     answer: str = Field(..., min_length=1)
 
 
@@ -243,7 +274,6 @@ class CheckAnswerResponse(BaseModel):
 # ===========================================================================
 
 class LessonCompleteRequest(BaseModel):
-    user_id: int
     correct_count: int = Field(..., ge=0)
     total_exercises: int = Field(..., ge=1)
 

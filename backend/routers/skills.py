@@ -5,21 +5,22 @@ Pattern: thin route handler + fat controller function.
 The controller (fetch_skill_tree) owns all DB interaction and returns
 plain Python objects; the route function only serialises to JSON.
 
-GET /skills/tree/{user_id}  →  List[UnitTreeResponse]
+GET /skills/tree  →  List[UnitTreeResponse]
 """
 
 from __future__ import annotations
 
 from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from database import get_db
-from models import Unit, Skill, UserProgress
+from models import Unit, Skill, User, UserProgress
 from schemas import SkillTreeNode, UnitTreeResponse
+from security import get_current_user
 
 router = APIRouter(prefix="/skills", tags=["skills"])
 
@@ -112,29 +113,16 @@ async def fetch_skill_tree(
 # ---------------------------------------------------------------------------
 
 @router.get(
-    "/tree/{user_id}",
+    "/tree",
     response_model=List[UnitTreeResponse],
     summary="Get the full skill tree merged with a user's progress",
-    responses={
-        404: {"description": "User not found"},
-    },
 )
 async def get_skill_tree(
-    user_id: int,
+    current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ) -> List[UnitTreeResponse]:
     """
     Returns every unit and its skills, enriched with the requesting
     user's crown count, completion state, and computed lock state.
     """
-    # Optional: verify the user exists first
-    from models import User
-    user_result = await db.execute(select(User).where(User.id == user_id))
-    user = user_result.scalar_one_or_none()
-    if user is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"User with id={user_id} not found.",
-        )
-
-    return await fetch_skill_tree(db, user_id)
+    return await fetch_skill_tree(db, current_user.id)

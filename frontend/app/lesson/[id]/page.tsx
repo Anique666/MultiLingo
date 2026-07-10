@@ -17,9 +17,10 @@ import {
   useLesson,
   type Exercise,
 } from "@/context/LessonContext";
+import ProtectedRoute from "@/app/components/ProtectedRoute";
+import { useAuth } from "@/app/context/AuthContext";
 
-const API_BASE = "http://127.0.0.1:8000";
-const USER_ID = 1;
+const API_BASE = "http://localhost:8000";
 const REQUEST_TIMEOUT_MS = 8000;
 
 interface LessonResponse {
@@ -38,7 +39,7 @@ async function fetchJson<T>(url: string): Promise<T> {
   }, REQUEST_TIMEOUT_MS);
 
   try {
-    const response = await fetch(url, { signal: controller.signal });
+    const response = await fetch(url, { signal: controller.signal, credentials: "include" });
 
     if (!response.ok) {
       throw new Error(`${url} failed with ${response.status}`);
@@ -82,6 +83,7 @@ function LessonPageContent() {
 export default function LessonPage() {
   const params = useParams<{ id: string }>();
   const lessonId = Number(params.id);
+  const { user } = useAuth();
   const [lesson, setLesson] = useState<LessonResponse | null>(null);
   const [initialHearts, setInitialHearts] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -95,8 +97,10 @@ export default function LessonPage() {
       setErrorMessage(null);
 
       try {
+        if (!user) return; // ProtectedRoute will handle redirect, but wait just in case
+
         const progress = await fetchJson<UserProgressResponse>(
-          `${API_BASE}/users/${USER_ID}/progress`,
+          `${API_BASE}/users/progress`,
         );
         const lessonData = await fetchJson<LessonResponse>(
           `${API_BASE}/lessons/${lessonId}`,
@@ -130,7 +134,7 @@ export default function LessonPage() {
     return () => {
       isMounted = false;
     };
-  }, [lessonId]);
+  }, [lessonId, user]);
 
   if (isLoading) {
     return (
@@ -151,7 +155,7 @@ export default function LessonPage() {
           </h1>
           <p className="font-bold text-gray-500">
             Make sure the FastAPI backend is running on
-            {" "}http://127.0.0.1:8000.
+            {" "}http://localhost:8000.
           </p>
           {errorMessage !== null ? (
             <p className="break-words text-sm font-bold text-gray-400">
@@ -164,13 +168,15 @@ export default function LessonPage() {
   }
 
   return (
-    <LessonProvider
-      userId={USER_ID}
-      lessonId={lesson.id}
-      exercises={lesson.exercises}
-      initialHearts={initialHearts}
-    >
-      <LessonPageContent />
-    </LessonProvider>
+    <ProtectedRoute>
+      <LessonProvider
+        userId={user?.id || 0}
+        lessonId={lesson.id}
+        exercises={lesson.exercises}
+        initialHearts={initialHearts}
+      >
+        <LessonPageContent />
+      </LessonProvider>
+    </ProtectedRoute>
   );
 }
