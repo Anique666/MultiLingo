@@ -1,0 +1,100 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: #ffffff;
+  --color-foreground: #171717;
+
+  /* Duolingo Brand Tokens */
+  --color-brand-green: #58CC02;
+  --color-brand-green-dark: #58A700;
+  --color-brand-red: #FF4B4B;
+  --color-brand-red-dark: #EA2B2B;
+  --color-brand-blue: #1CB0F6;
+  --color-brand-blue-dark: #0A8ED6;
+  --color-brand-blue-bg: #DDF4FF;
+  --color-brand-yellow: #FFC800;
+  --color-brand-yellow-dark: #E6B400;
+  --color-brand-purple: #CE82FF;
+  --color-brand-gray: #E5E5E5;
+
+  /* Neutrals */
+  --color-border: #E5E5E5;
+  --color-muted: #777777;
+  --color-surface: #FFFFFF;
+  --color-surface-alt: #F7F7F7;
+  --color-disabled: #DADADA;
+
+  /* Spacing & Radius */
+  --spacing-card: 1.5rem;
+  --spacing-section: 2rem;
+  --radius-card: 1rem;
+  --radius-button: 0.75rem;
+
+  /* Typography */
+  --font-sans: var(--font-nunito), "Nunito", sans-serif;
+  --text-display: 2.5rem;
+  --text-h1: 2rem;
+  --text-h2: 1.5rem;
+  --text-body: 1rem;
+  --text-caption: 0.875rem;
+
+  /* Elevation & Shadows */
+  --shadow-card: 0 2px 0 rgb(0 0 0 / 0.08);
+  --shadow-button: 0 4px 0 rgb(0 0 0 / 0.12);
+  --shadow-modal: 0 16px 40px rgb(0 0 0 / 0.18);
+
+  /* Motion & Timing */
+  --ease-snappy: cubic-bezier(.2, .8, .2, 1);
+  --ease-bounce: cubic-bezier(.34, 1.56, .64, 1);
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+}
+
+@layer base {
+  body {
+    background: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+  }
+}
+
+@layer components {
+
+  /* Master Tactile Button Rules */
+  .btn-tactile {
+    @apply rounded-xl border-b-4 transition-all duration-150 active:translate-y-1 active:border-b-0 disabled:translate-y-0 disabled:border-b-4 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .skill-node-pulse {
+    outline: 0 solid var(--skill-node-ring);
+    animation: skill-node-ring-pulse 2.4s var(--ease-snappy) infinite;
+  }
+
+  .home-tree-mascot-float {
+    animation: home-tree-mascot-float 2.8s ease-in-out infinite;
+  }
+}
+
+@keyframes skill-node-ring-pulse {
+  0%,
+  100% {
+    outline-width: 0;
+    outline-offset: 0;
+  }
+
+  50% {
+    outline-width: 8px;
+    outline-offset: 6px;
+  }
+}
+
+@keyframes home-tree-mascot-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}

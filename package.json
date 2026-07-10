@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "react": "^19.2.7",
+    "storybook": "^10.5.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3"
+  }
+}
