@@ -1,5 +1,18 @@
 # MultiLingo
 
+## Table of Contents
+
+- [Overview](#overview)
+- [Tech Stack](#tech-stack)
+- [Setup Instructions](#setup-instructions)
+- [Deployment](#deployment)
+- [Architecture Overview](#architecture-overview)
+- [Database Schema](#database-schema)
+- [Entity Relationship Model](#entity-relationship-model)
+- [API Overview](#api-overview)
+- [Assumptions & Simplifications](#assumptions--simplifications)
+- [Deployment Note](#deployment-note)
+
 ## Overview
 
 MultiLingo is a Duolingo-style language learning app built around a seeded Spanish course. Learners move through an ordered skill tree, complete lessons made of multiple exercise types, and get feedback through XP, streaks, hearts, crowns, practice streaks, leaderboard position, and claimable chests. The core loop is: sign in, unlock the next skill, answer exercises, lose hearts for mistakes, complete the lesson, then return to the tree with updated progress.
@@ -118,6 +131,7 @@ The Render Postgres connection string is provided to the backend as `DATABASE_UR
 
 Production seeding is manual. `main.py` only auto-seeds when `ENV` is not `production`, so the deployed database should be initialized intentionally by running `python reseed.py` against the Render Postgres database when the course content needs to be loaded or refreshed.
 
+
 ## Architecture Overview
 
 The backend is split by API concern under `backend/routers`. Larger routers keep HTTP handling thin and move database work into controller-style functions such as `fetch_skill_tree`, `get_lesson_with_exercises`, `complete_lesson`, `check_exercise_answer`, `fetch_user_progress`, and `fetch_leaderboard`. Smaller endpoints, such as chests and practice, keep the logic inline because the route body is still short and closely tied to the response.
@@ -133,6 +147,77 @@ When the final lesson exercise is finished, the client calls `POST /lessons/{les
 ## Database Schema
 
 The SQLAlchemy models live in `backend/models.py`. Course content and user progress are deliberately separate. Units, skills, lessons, and exercises describe the shared course. `UserProgress` and `ChestReward` describe what one user has done inside that course. This avoids duplicating course content per user and keeps changes to the seeded course independent from each learner's state.
+
+### Entity Relationship Model
+
+```mermaid
+erDiagram
+    USER {
+        int id PK
+        string email UK
+        string hashed_password
+        string username UK
+        int xp
+        int streak
+        int practice_streak
+        int hearts
+        string last_active
+        string created_at
+        string hearts_updated_at
+    }
+
+    UNIT {
+        int id PK
+        string title
+        int order
+    }
+
+    SKILL {
+        int id PK
+        int unit_id FK
+        string title
+        string icon
+        int order
+    }
+
+    LESSON {
+        int id PK
+        int skill_id FK
+        int order
+    }
+
+    EXERCISE {
+        int id PK
+        int lesson_id FK
+        string type
+        string question
+        json options
+        string correct_answer
+    }
+
+    USER_PROGRESS {
+        int id PK
+        int user_id FK
+        int skill_id FK
+        int crowns
+        boolean is_completed
+        int completion_count
+    }
+
+    CHEST_REWARD {
+        int id PK
+        int user_id FK
+        int chest_index
+        string claimed_at
+    }
+
+    UNIT ||--o{ SKILL : contains
+    SKILL ||--o{ LESSON : contains
+    LESSON ||--o{ EXERCISE : contains
+    USER ||--o{ USER_PROGRESS : has
+    SKILL ||--o{ USER_PROGRESS : tracks
+    USER ||--o{ CHEST_REWARD : claims
+```
 
 `User` stores account and gamification state:
 
