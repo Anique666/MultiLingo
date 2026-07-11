@@ -12,6 +12,7 @@ import {
   UserRound,
   LogOut,
 } from "lucide-react";
+import OwlMascot from "./OwlMascot";
 import { useAuth } from "../context/AuthContext";
 
 const NAV_ITEMS = [
@@ -30,11 +31,19 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="sticky top-24 w-full self-start bg-transparent px-4">
+    <aside className="fixed left-0 top-0 hidden h-screen w-full flex-col border-r-2 border-border bg-white px-4 lg:flex lg:w-[16rem] z-50">
+      {/* Brand / Logo Area */}
+      <div className="mb-8 flex items-center gap-3 px-4 pt-4">
+        <OwlMascot className="size-8" />
+        <span className="text-[26px] font-black tracking-tighter text-[#58cc02]">
+          duolingo
+        </span>
+      </div>
+
       <nav aria-label="Primary" className="space-y-3">
         {NAV_ITEMS.map((item) => {
           const Icon = item.icon;
-          const isActive = item.label === "LEARN" ? pathname === "/sections" || pathname === "/learn" : item.active;
+          const isActive = item.label === "LEARN" ? pathname === "/sections" || pathname === "/learn" : item.label === "LEADERBOARDS" ? pathname === "/leaderboard" : item.label === "PROFILE" ? pathname === "/profile" : item.label === "PRACTICE" ? pathname === "/practice" : item.active;
 
           return (
             <button
@@ -45,7 +54,13 @@ export default function Sidebar() {
                   ? logout
                   : item.label === "LEARN"
                     ? () => router.push("/sections")
-                    : undefined
+                    : item.label === "LEADERBOARDS"
+                      ? () => router.push("/leaderboard")
+                      : item.label === "PROFILE"
+                        ? () => router.push("/profile")
+                        : item.label === "PRACTICE"
+                          ? () => router.push("/practice")
+                          : undefined
               }
               aria-current={isActive ? "page" : undefined}
               className={[
@@ -70,8 +85,8 @@ export default function Sidebar() {
                           : item.label === "SHOP"
                             ? "text-brand-red"
                             : item.label === "PROFILE"
-                              ? "text-[var(--color-muted)]"
-                              : "text-brand-purple",
+                              ? "text-brand-purple"
+                              : "text-[var(--color-muted)]",
                 ].join(" ")}
               />
               <span>{item.label}</span>

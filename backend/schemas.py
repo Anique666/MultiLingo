@@ -46,15 +46,19 @@ class AuthCurrentUserResponse(BaseModel):
     username: str
     xp: int = Field(..., ge=0)
     streak: int = Field(..., ge=0)
+    practice_streak: int = Field(default=0, ge=0)
     hearts: int = Field(..., ge=0, le=5)
     last_active: Optional[str] = None
+    created_at: Optional[str] = None
 
 class UserBase(BaseModel):
     username: str = Field(..., min_length=1, max_length=50)
     xp: int = Field(default=0, ge=0)
     streak: int = Field(default=0, ge=0)
+    practice_streak: int = Field(default=0, ge=0)
     hearts: int = Field(default=5, ge=0, le=5)
     last_active: Optional[str] = None  # ISO 8601 date string, e.g. "2026-07-10"
+    created_at: Optional[str] = None
 
 
 class UserCreate(UserBase):
@@ -307,4 +311,33 @@ class UserProgressResponse(BaseModel):
     streak: int = Field(..., ge=0)
     hearts: int = Field(..., ge=0)
     last_active: Optional[str] = None
+    rank: Optional[int] = None
+
+# ===========================================================================
+# Chests
+# ===========================================================================
+
+class ChestResponse(BaseModel):
+    chest_index: int
+    state: str = Field(..., pattern=r"^(locked|available|claimed)$")
+
+
+class ChestClaimResponse(BaseModel):
+    xp_awarded: int = Field(..., ge=0)
+    total_xp: int = Field(..., ge=0)
+
+# ===========================================================================
+# Practice
+# ===========================================================================
+
+class PracticeCheckRequest(BaseModel):
+    exercise_id: int
+    answer: str = Field(..., min_length=1)
+
+class PracticeCheckResponse(BaseModel):
+    correct: bool
+    correct_answer: str
+    practice_streak: int = Field(..., ge=0)
+    heart_awarded: bool
+    hearts_remaining: int = Field(..., ge=0, le=5)
 

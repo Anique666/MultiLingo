@@ -10,7 +10,7 @@ type LeaderboardEntry = {
   xp: number;
 };
 
-export default function LeaderboardCard() {
+export default function CompactLeaderboard() {
   const { user: currentUser } = useAuth();
   const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(true);

@@ -10,6 +10,7 @@ import FillBlank from "@/app/components/FillBlank";
 import Matching from "@/app/components/Matching";
 import MultipleChoice from "@/app/components/MultipleChoice";
 import OutOfHeartsModal from "@/app/components/OutOfHeartsModal";
+import OwlMascot from "@/app/components/OwlMascot";
 import ProgressBar from "@/app/components/ProgressBar";
 import Translate from "@/app/components/Translate";
 import {
@@ -59,18 +60,28 @@ function LessonPageContent() {
     <div className="flex min-h-screen flex-col bg-white pb-32">
       <ProgressBar />
 
-      <main className="mx-auto flex w-full max-w-2xl flex-1 items-center justify-center p-4">
-        {status === "completed" ? null : exercise?.type === "multiple_choice" ? (
-          <MultipleChoice />
-        ) : exercise?.type === "translate" ? (
-          <Translate />
-        ) : exercise?.type === "fill_blank" ? (
-          <FillBlank />
-        ) : exercise?.type === "match" ? (
-          <Matching />
-        ) : exercise?.type === "arrange_sentence" ? (
-          <ArrangeSentence />
-        ) : null}
+      <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col items-center justify-center p-4 md:flex-row md:items-start md:gap-8 md:pt-12">
+        {status !== "completed" && exercise && (
+          <div className="mb-8 flex shrink-0 justify-center md:mb-0 md:mt-4">
+            <OwlMascot
+              className={`h-24 w-24 md:h-32 md:w-32 ${status === "correct" ? "mascot-bounce" : ""
+                }`}
+            />
+          </div>
+        )}
+        <div className="flex w-full max-w-2xl flex-col">
+          {status === "completed" ? null : exercise?.type === "multiple_choice" ? (
+            <MultipleChoice />
+          ) : exercise?.type === "translate" ? (
+            <Translate />
+          ) : exercise?.type === "fill_blank" ? (
+            <FillBlank />
+          ) : exercise?.type === "match" ? (
+            <Matching />
+          ) : exercise?.type === "arrange_sentence" ? (
+            <ArrangeSentence />
+          ) : null}
+        </div>
       </main>
 
       <OutOfHeartsModal />

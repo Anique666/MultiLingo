@@ -22,8 +22,9 @@ async def fetch_leaderboard(db: AsyncSession) -> List[LeaderboardUserRead]:
     """Return the top 10 users ordered by XP."""
     result = await db.execute(
         select(User)
+        .where(User.xp > 0)
         .order_by(User.xp.desc(), User.id.asc())
-        .limit(10)
+        .limit(20)
     )
     users = result.scalars().all()
     return [LeaderboardUserRead.model_validate(user) for user in users]

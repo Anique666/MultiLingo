@@ -63,7 +63,7 @@ export default function SignupPage() {
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                 <input
                     type="text"
-                    placeholder="Name"
+                    placeholder="Username"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     className="h-12 rounded-2xl border-2 border-border bg-surface-alt px-4 font-bold text-gray-700 outline-none focus:border-brand-blue"
@@ -90,7 +90,10 @@ export default function SignupPage() {
                 <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="btn-primary mt-2 h-12 w-full text-base"
+                    className={`btn-tactile mt-2 flex h-14 w-full items-center justify-center rounded-2xl border-brand-green-dark bg-brand-green text-lg font-black uppercase tracking-widest text-white shadow-sm transition-all hover:brightness-105 ${isSubmitting
+                        ? "translate-y-1 border-b-0 opacity-80 shadow-none"
+                        : "border-b-4 active:translate-y-1 active:border-b-0 active:shadow-none"
+                        }`}
                 >
                     {isSubmitting ? "CREATING ACCOUNT..." : "CREATE ACCOUNT"}
                 </button>

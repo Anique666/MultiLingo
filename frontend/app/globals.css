@@ -82,6 +82,43 @@
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
+
+  .streak-particle {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    opacity: 0;
+    animation: streak-particle-burst 1s ease-out forwards;
+  }
+
+  .mascot-bounce {
+    animation: mascot-bounce 0.6s var(--ease-bounce);
+  }
+}
+
+@keyframes streak-particle-burst {
+  0% {
+    transform: scale(0) translate(0, 0);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1.5) translate(var(--tx), var(--ty));
+    opacity: 0;
+  }
+}
+
+@keyframes mascot-bounce {
+
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+
+  50% {
+    transform: translateY(-15px) scale(1.05);
+  }
 }
 
 @keyframes skill-node-ring-pulse {

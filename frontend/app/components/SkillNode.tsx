@@ -103,17 +103,17 @@ export default function SkillNode({
   } as CSSProperties;
 
   const buttonClassName = [
-    "relative flex size-[72px] shrink-0 items-center justify-center rounded-full border-2 font-extrabold",
+    "relative flex size-24 shrink-0 items-center justify-center rounded-full border-2 font-extrabold cursor-pointer",
     isLocked
       ? "cursor-not-allowed"
-      : "btn-tactile cursor-default border-b-4",
-    isAvailable ? "skill-node-pulse cursor-pointer" : "",
+      : "btn-tactile cursor-pointer border-b-4",
+    isAvailable ? "skill-node-pulse" : "",
   ]
     .filter(Boolean)
     .join(" ");
 
   const handleClick = () => {
-    if (isAvailable) {
+    if (isAvailable || isCompleted) {
       onSelect?.(skillId);
     }
   };
@@ -122,29 +122,29 @@ export default function SkillNode({
     <div className="flex w-32 flex-col items-center gap-2">
       <button
         type="button"
-        aria-label={isAvailable ? `Start ${title}` : title}
-        aria-disabled={!isAvailable}
+        aria-label={isAvailable || isCompleted ? `Start ${title}` : title}
+        aria-disabled={isLocked}
         disabled={isLocked}
-        tabIndex={isAvailable ? 0 : -1}
+        tabIndex={isAvailable || isCompleted ? 0 : -1}
         className={buttonClassName}
         style={buttonStyle}
         onClick={handleClick}
       >
         {isLocked ? (
-          <Lock aria-hidden="true" className="size-8 stroke-[3]" />
+          <Lock aria-hidden="true" className="size-10 stroke-[3]" />
         ) : isCompleted ? (
-          <Check aria-hidden="true" className="size-9 stroke-[3.5]" />
+          <Check aria-hidden="true" className="size-12 stroke-[3.5]" />
         ) : (
           <Star
             aria-hidden="true"
-            className="size-9 fill-current stroke-[3]"
+            className="size-12 fill-current stroke-[3]"
           />
         )}
 
         {hasCrown ? (
           <Crown
             aria-hidden="true"
-            className="absolute -right-1 -top-3 size-7 fill-current stroke-[3]"
+            className="absolute -right-2 -top-4 size-10 fill-current stroke-[3]"
             style={{ color: "var(--color-brand-yellow)" }}
           />
         ) : null}

@@ -99,9 +99,46 @@ async def complete_lesson(
         )
 
     # ------------------------------------------------------------------
-    # 1. XP
+    # 1. Skill progress & XP (Merged for replay logic)
     # ------------------------------------------------------------------
-    xp_awarded = XP_PER_CORRECT * correct_count
+    skill_id = lesson.skill_id
+
+    prog_result = await db.execute(
+        select(UserProgress).where(
+            UserProgress.user_id == current_user.id,
+            UserProgress.skill_id == skill_id,
+        )
+    )
+    progress = prog_result.scalar_one_or_none()
+
+    if progress is None:
+        progress = UserProgress(
+            user_id=current_user.id,
+            skill_id=skill_id,
+            crowns=0,
+            is_completed=False,
+            completion_count=0,
+        )
+        db.add(progress)
+        
+    current_completions = progress.completion_count
+    progress.completion_count += 1
+    
+    # Always unlock the skill upon completion, regardless of perfect score
+    progress.is_completed = True
+
+    # Award a crown only on a perfect lesson
+    if correct_count == total_exercises:
+        progress.crowns = min(progress.crowns + 1, 5)
+
+    base_xp = XP_PER_CORRECT * correct_count
+    if current_completions == 0:
+        xp_awarded = base_xp
+    elif current_completions == 1:
+        xp_awarded = base_xp // 2
+    else:
+        xp_awarded = 0
+
     current_user.xp += xp_awarded
 
     # ------------------------------------------------------------------
@@ -126,33 +163,6 @@ async def complete_lesson(
             current_user.streak = 1  # reset (includes gap > 1 and first time)
 
         current_user.last_active = today_str
-
-    # ------------------------------------------------------------------
-    # 3. Skill progress
-    # ------------------------------------------------------------------
-    skill_id = lesson.skill_id
-
-    prog_result = await db.execute(
-        select(UserProgress).where(
-            UserProgress.user_id == current_user.id,
-            UserProgress.skill_id == skill_id,
-        )
-    )
-    progress = prog_result.scalar_one_or_none()
-
-    if progress is None:
-        progress = UserProgress(
-            user_id=current_user.id,
-            skill_id=skill_id,
-            crowns=0,
-            is_completed=False,
-        )
-        db.add(progress)
-
-    # Award a crown and mark completed on a perfect lesson
-    if correct_count == total_exercises:
-        progress.crowns = min(progress.crowns + 1, 5)
-        progress.is_completed = True
 
     db.add(current_user)
     db.add(progress)

@@ -28,9 +28,15 @@ DUMMY_USERNAMES = [
     "lingo_lucy",
     "fluent_felix",
     "vocab_victor",
-    "grammar_gina",
     "duo_diego",
     "phrasebook_paul",
+    "grammar_greg",
+    "fluent_fiona",
+    "syntax_sally",
+    "lingo_leo",
+    "verb_vicky",
+    "vocab_vincent",
+    "idiom_iris",
 ]
 
 
@@ -58,11 +64,35 @@ def build_leaderboard_users() -> list[models.User]:
 
 
 async def seed_leaderboard_users(session: AsyncSession) -> None:
-    existing_count = await session.scalar(select(func.count()).select_from(models.User))
-    if existing_count:
-        return
+    # Fetch existing usernames
+    result = await session.execute(select(models.User.username))
+    existing_usernames = set(result.scalars().all())
 
-    session.add_all(build_leaderboard_users())
+    to_add = []
+    if PRIMARY_USER["username"] not in existing_usernames:
+        to_add.append(
+            models.User(
+                username=PRIMARY_USER["username"],
+                xp=PRIMARY_USER["xp"],
+                streak=0,
+                hearts=5,
+                last_active=None,
+            )
+        )
+    for username in DUMMY_USERNAMES:
+        if username not in existing_usernames:
+            to_add.append(
+                models.User(
+                    username=username,
+                    xp=random.randint(50, 2000),
+                    streak=random.randint(0, 42),
+                    hearts=5,
+                    last_active=None,
+                )
+            )
+            
+    if to_add:
+        session.add_all(to_add)
 
 
 async def reset_and_seed_database() -> None:

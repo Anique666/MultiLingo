@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, JSON
 from sqlalchemy.orm import relationship
+import datetime
 
 from database import Base  # single Base shared with the engine
 
@@ -11,8 +12,10 @@ class User(Base):
     username = Column(String, unique=True, index=True)
     xp = Column(Integer, default=0)
     streak = Column(Integer, default=0)
+    practice_streak = Column(Integer, default=0)
     hearts = Column(Integer, default=5)
     last_active = Column(String) # Simple ISO string for streak calculation
+    created_at = Column(String, default=lambda: datetime.datetime.utcnow().isoformat())
 
 class Unit(Base):
     __tablename__ = "units"
@@ -57,3 +60,12 @@ class UserProgress(Base):
     skill_id = Column(Integer, ForeignKey("skills.id"))
     crowns = Column(Integer, default=0) # Progress rings
     is_completed = Column(Boolean, default=False)
+    completion_count = Column(Integer, default=0)
+
+class ChestReward(Base):
+    """Tracks which chests a user has claimed"""
+    __tablename__ = "chest_rewards"
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), index=True)
+    chest_index = Column(Integer, index=True)
+    claimed_at = Column(String, default=lambda: datetime.datetime.utcnow().isoformat())

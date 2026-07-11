@@ -5,11 +5,12 @@ import { Check, X } from "lucide-react";
 import { useLesson } from "@/context/LessonContext";
 
 export default function FeedbackFooter() {
-  const { status, correctAnswerText, handleContinue } = useLesson();
+  const { status, correctAnswerText, handleContinue, correctStreak } = useLesson();
 
   const isCorrect = status === "correct";
   const isIncorrect = status === "incorrect";
   const isVisible = isCorrect || isIncorrect;
+  const isMilestone = isCorrect && correctStreak >= 3 && (correctStreak === 3 || correctStreak % 5 === 0);
 
   return (
     <footer
@@ -26,6 +27,25 @@ export default function FeedbackFooter() {
         .filter(Boolean)
         .join(" ")}
     >
+      {isMilestone && (
+        <div className="absolute left-[15%] top-0 pointer-events-none" aria-hidden="true">
+          {[
+            { color: "bg-brand-yellow", tx: "-40px", ty: "-70px" },
+            { color: "bg-brand-blue", tx: "40px", ty: "-80px" },
+            { color: "bg-brand-red", tx: "-15px", ty: "-100px" },
+            { color: "bg-brand-purple", tx: "50px", ty: "-40px" },
+            { color: "bg-brand-green-dark", ty: "-110px", tx: "15px" },
+            { color: "bg-brand-yellow-dark", tx: "-60px", ty: "-40px" },
+          ].map((p, i) => (
+            <div
+              key={i}
+              className={`streak-particle ${p.color}`}
+              style={{ "--tx": p.tx, "--ty": p.ty } as React.CSSProperties}
+            />
+          ))}
+        </div>
+      )}
+
       {isVisible ? (
         <div className="mx-auto flex w-full max-w-2xl flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-start gap-3">
@@ -42,7 +62,7 @@ export default function FeedbackFooter() {
             <div className="min-w-0">
               {isCorrect ? (
                 <p className="text-xl font-extrabold text-brand-green-dark">
-                  Excellent!
+                  {isMilestone ? "On Fire! 🔥" : "Excellent!"}
                 </p>
               ) : (
                 <>

@@ -80,7 +80,10 @@ export default function LoginPage() {
                 <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="btn-primary mt-2 h-12 w-full text-base"
+                    className={`btn-tactile mt-2 flex h-14 w-full items-center justify-center rounded-2xl border-brand-green-dark bg-brand-green text-lg font-black uppercase tracking-widest text-white shadow-sm transition-all hover:brightness-105 ${isSubmitting
+                            ? "translate-y-1 border-b-0 opacity-80 shadow-none"
+                            : "border-b-4 active:translate-y-1 active:border-b-0 active:shadow-none"
+                        }`}
                 >
                     {isSubmitting ? "LOGGING IN..." : "LOG IN"}
                 </button>

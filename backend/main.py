@@ -22,7 +22,7 @@ from database import engine, Base, AsyncSessionLocal
 # Import models so their table definitions are registered on Base
 import models  # noqa: F401
 
-from routers import auth, skills, exercises, lessons, users, leaderboard
+from routers import auth, skills, exercises, lessons, users, leaderboard, chests, practice
 from scripts.seed_data import seed_leaderboard_users
 
 
@@ -31,6 +31,7 @@ async def seed_dev_data() -> None:
     async with AsyncSessionLocal() as session:
         async def ensure_skill(
             skill_id: int,
+            unit_id: int,
             title: str,
             icon: str,
             order: int,
@@ -40,7 +41,7 @@ async def seed_dev_data() -> None:
                 session.add(
                     models.Skill(
                         id=skill_id,
-                        unit_id=1,
+                        unit_id=unit_id,
                         title=title,
                         icon=icon,
                         order=order,
@@ -48,7 +49,7 @@ async def seed_dev_data() -> None:
                 )
                 return
 
-            skill.unit_id = 1
+            skill.unit_id = unit_id
             skill.title = title
             skill.icon = icon
             skill.order = order
@@ -84,165 +85,26 @@ async def seed_dev_data() -> None:
 
         await seed_leaderboard_users(session)
 
-        if await session.get(models.Unit, 1) is None:
-            session.add(
-                models.Unit(
-                    id=1,
-                    title="Unit 1: Basics",
-                    order=1,
+
+        from scripts.seed_questions import UNITS_SEED, SKILLS_SEED, LESSONS_SEED, EXERCISES_SEED
+
+        for unit in UNITS_SEED:
+            if await session.get(models.Unit, unit["id"]) is None:
+                session.add(
+                    models.Unit(
+                        id=unit["id"],
+                        title=unit["title"],
+                        order=unit["order"],
+                    )
                 )
-            )
+        
+        for skill in SKILLS_SEED:
+            await ensure_skill(skill["id"], skill["unit_id"], skill["title"], skill["icon"], skill["order"])
 
-        skill_specs = [
-            (1, "Basics", "star", 1),
-            (2, "Food & Drinks", "cup-soda", 2),
-            (3, "Family & Home", "home", 3),
-        ]
-        for skill_id, title, icon, order in skill_specs:
-            await ensure_skill(skill_id, title, icon, order)
+        for lesson in LESSONS_SEED:
+            await ensure_lesson(lesson["id"], lesson["skill_id"], lesson["order"])
 
-        await ensure_lesson(1, 1, 1)
-        await ensure_lesson(2, 2, 2)
-        await ensure_lesson(3, 3, 3)
-
-        exercise_specs = [
-            # Lesson 1 — Greetings & Basics
-            {
-                "id": 1,
-                "lesson_id": 1,
-                "type": "multiple_choice",
-                "question": "Which one means 'hello'?",
-                "options": ["hola", "adios", "gracias", "agua"],
-                "correct_answer": "hola",
-            },
-            {
-                "id": 2,
-                "lesson_id": 1,
-                "type": "translate",
-                "question": "I drink water",
-                "options": ["yo", "bebo", "agua"],
-                "correct_answer": "yo bebo agua",
-            },
-            {
-                "id": 3,
-                "lesson_id": 1,
-                "type": "fill_blank",
-                "question": "___ means 'goodbye'",
-                "options": ["adios", "hola", "gracias"],
-                "correct_answer": "adios",
-            },
-            {
-                "id": 4,
-                "lesson_id": 1,
-                "type": "match",
-                "question": "Match the greetings",
-                "options": [
-                    '{"left":"Hello","right":"hola"}',
-                    '{"left":"Goodbye","right":"adios"}',
-                    '{"left":"Please","right":"por favor"}',
-                ],
-                "correct_answer": "Goodbye:adios,Hello:hola,Please:por favor",
-            },
-            {
-                "id": 5,
-                "lesson_id": 1,
-                "type": "arrange_sentence",
-                "question": "Arrange the Spanish sentence for 'Good night'",
-                "options": ["noches", "buenas"],
-                "correct_answer": "buenas noches",
-            },
-            # Lesson 2 — Food & Drinks
-            {
-                "id": 6,
-                "lesson_id": 2,
-                "type": "multiple_choice",
-                "question": "Which one means 'water'?",
-                "options": ["agua", "pan", "leche", "cafe"],
-                "correct_answer": "agua",
-            },
-            {
-                "id": 7,
-                "lesson_id": 2,
-                "type": "translate",
-                "question": "I eat bread",
-                "options": ["yo", "como", "pan"],
-                "correct_answer": "yo como pan",
-            },
-            {
-                "id": 8,
-                "lesson_id": 2,
-                "type": "fill_blank",
-                "question": "I drink ___",
-                "options": ["agua", "leche", "cafe"],
-                "correct_answer": "agua",
-            },
-            {
-                "id": 9,
-                "lesson_id": 2,
-                "type": "match",
-                "question": "Match the food words",
-                "options": [
-                    '{"left":"Water","right":"agua"}',
-                    '{"left":"Bread","right":"pan"}',
-                    '{"left":"Milk","right":"leche"}',
-                ],
-                "correct_answer": "Bread:pan,Milk:leche,Water:agua",
-            },
-            {
-                "id": 10,
-                "lesson_id": 2,
-                "type": "arrange_sentence",
-                "question": "Arrange the Spanish sentence for 'I want coffee'",
-                "options": ["cafe", "quiero", "yo"],
-                "correct_answer": "yo quiero cafe",
-            },
-            # Lesson 3 — Family & Home
-            {
-                "id": 11,
-                "lesson_id": 3,
-                "type": "multiple_choice",
-                "question": "Which one means 'mother'?",
-                "options": ["madre", "padre", "hermano", "casa"],
-                "correct_answer": "madre",
-            },
-            {
-                "id": 12,
-                "lesson_id": 3,
-                "type": "translate",
-                "question": "My family is big",
-                "options": ["mi", "familia", "es", "grande"],
-                "correct_answer": "mi familia es grande",
-            },
-            {
-                "id": 13,
-                "lesson_id": 3,
-                "type": "fill_blank",
-                "question": "Brother = ___",
-                "options": ["hermano", "hermana", "padre"],
-                "correct_answer": "hermano",
-            },
-            {
-                "id": 14,
-                "lesson_id": 3,
-                "type": "match",
-                "question": "Match the family words",
-                "options": [
-                    '{"left":"Mother","right":"madre"}',
-                    '{"left":"Father","right":"padre"}',
-                    '{"left":"Sister","right":"hermana"}',
-                    '{"left":"Family","right":"familia"}',
-                ],
-                "correct_answer": "Family:familia,Father:padre,Mother:madre,Sister:hermana",
-            },
-            {
-                "id": 15,
-                "lesson_id": 3,
-                "type": "arrange_sentence",
-                "question": "Arrange the Spanish sentence for 'The family is at home'",
-                "options": ["familia", "esta", "en", "casa", "la"],
-                "correct_answer": "la familia esta en casa",
-            },
-        ]
+        exercise_specs = EXERCISES_SEED
 
         for spec in exercise_specs:
             await ensure_exercise(
@@ -293,4 +155,6 @@ app.include_router(exercises.router)
 app.include_router(lessons.router)
 app.include_router(users.router)
 app.include_router(leaderboard.router)
+app.include_router(chests.router)
+app.include_router(practice.router)
 

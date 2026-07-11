@@ -51,7 +51,7 @@ export default function CelebrationScreen() {
       <button
         type="button"
         onClick={() => {
-          router.push("/");
+          router.push("/learn");
         }}
         className="btn-tactile w-full max-w-sm border-brand-green border-b-brand-green-dark bg-brand-green py-4 text-lg font-extrabold text-white"
       >
