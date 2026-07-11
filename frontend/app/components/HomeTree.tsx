@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Star } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import ChestNode, { type ChestState } from "./ChestNode";
+import OwlMascot from "./OwlMascot";
 import SkillNode, {
   getUnitColorTokens,
   type SkillStatus,
@@ -216,15 +217,20 @@ function UnitPath({
       <UnitBanner unit={unit} unitNumber={unitIndex + 1} />
 
       <div className="relative mx-auto w-full max-w-sm overflow-visible px-8">
-        {pathItems.length > 0 ? (
-          <Star
-            aria-hidden="true"
-            className="home-tree-mascot-float absolute z-10 size-9 fill-current stroke-[3] text-brand-yellow"
+        {pathItems.length > 0 && milestoneIndex > -1 ? (
+          <div
+            className="home-tree-mascot-float absolute z-10 flex flex-col items-center"
             style={{
               left: `calc(50% + ${mascotOffset + 72}px)`,
               top: `${milestoneIndex * NODE_VERTICAL_STEP + 8}px`,
             }}
-          />
+          >
+            <div className="relative">
+              {/* Floor matching generic shadow color */}
+              <div className="absolute -bottom-2 left-1/2 -z-10 h-7 w-20 -translate-x-1/2 rounded-[50%] bg-border" />
+              <OwlMascot className="size-24" />
+            </div>
+          </div>
         ) : null}
 
         <div className="flex flex-col items-center gap-[18px] overflow-visible py-1">
