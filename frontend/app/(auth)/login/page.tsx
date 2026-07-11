@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuth, API_BASE } from "../../context/AuthContext";
+import OwlMascot from "../../components/OwlMascot";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
@@ -49,6 +50,9 @@ export default function LoginPage() {
 
     return (
         <div className="flex min-h-screen max-w-sm mx-auto flex-col justify-center px-4 bg-background">
+            <div className="flex justify-center mb-6">
+                <OwlMascot className="w-24 h-24" />
+            </div>
             <div className="mb-8 text-center text-3xl font-extrabold text-foreground">
                 Log in to continue
             </div>

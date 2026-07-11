@@ -19,6 +19,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 
 
+
 from database import engine, Base, AsyncSessionLocal
 # Import models so their table definitions are registered on Base
 import models  # noqa: F401
@@ -142,7 +143,7 @@ app = FastAPI(
 # ---------------------------------------------------------------------------
 # CORS — allow the deployed frontend + localhost for dev
 # ---------------------------------------------------------------------------
-_frontend_url = os.getenv("FRONTEND_URL", "")
+_frontend_url = os.getenv("FRONTEND_URL", "").rstrip("/")
 _allowed_origins = ["http://localhost:3000", "http://127.0.0.1:3000"]
 if _frontend_url:
     _allowed_origins.append(_frontend_url)
