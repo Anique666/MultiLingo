@@ -3,8 +3,10 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { useRouter } from "next/navigation";
 
-/** Base URL for all backend API calls. */
-export const API_BASE = "http://localhost:8000";
+import { API_BASE } from "@/app/lib/api";
+
+/** Re-export so existing imports continue to work. */
+export { API_BASE };
 
 export interface User {
     id: number;

@@ -8,7 +8,7 @@ import DailyQuestsCard from "../components/DailyQuestsCard";
 export default function SectionsPage() {
     return (
         <ProtectedRoute>
-            <div className="min-h-screen bg-white">
+            <div className="min-h-screen bg-background">
                 <TopBar />
                 <Sidebar />
                 <main className="w-full pb-10 pt-24 lg:pl-[16rem]">

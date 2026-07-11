@@ -55,15 +55,15 @@ export default function Translate() {
   return (
     <section className="mx-auto flex w-full max-w-2xl flex-col gap-8">
       <div className="flex flex-col gap-4">
-        <h1 className="text-2xl font-extrabold text-gray-800">
+        <h1 className="text-2xl font-extrabold text-foreground">
           Translate this sentence
         </h1>
-        <p className="rounded-2xl border-2 border-gray-200 p-4 text-lg font-bold text-gray-800">
+        <p className="rounded-2xl border-2 border-border p-4 text-lg font-bold text-foreground">
           {exercise.question}
         </p>
       </div>
 
-      <div className="flex min-h-[60px] flex-wrap gap-2 border-b-2 border-dashed border-gray-300 py-2">
+      <div className="flex min-h-[60px] flex-wrap gap-2 border-b-2 border-dashed border-border py-2">
         {selectedWords.map((word, index) => (
           <button
             key={`${word}-${index}`}
@@ -72,7 +72,7 @@ export default function Translate() {
             onClick={() => {
               handleDeselect(word);
             }}
-            className="btn-tactile rounded-xl border-2 border-gray-200 bg-white px-4 py-2 font-bold text-gray-700"
+            className="btn-tactile rounded-xl border-2 border-border bg-surface px-4 py-2 font-bold text-foreground"
           >
             {word}
           </button>
@@ -88,7 +88,7 @@ export default function Translate() {
             onClick={() => {
               handleSelect(word);
             }}
-            className="btn-tactile rounded-xl border-2 border-gray-200 bg-white px-4 py-2 font-bold text-gray-700"
+            className="btn-tactile rounded-xl border-2 border-border bg-surface px-4 py-2 font-bold text-foreground"
           >
             {word}
           </button>

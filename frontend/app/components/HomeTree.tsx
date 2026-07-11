@@ -10,6 +10,7 @@ import SkillNode, {
   type SkillStatus,
   type UnitColor,
 } from "./SkillNode";
+import { API_BASE } from "@/app/lib/api";
 
 export type HomeTreeSkill = {
   skill_id: number | string;
@@ -290,8 +291,8 @@ export default function HomeTree({
       try {
         if (!user) return;
         const [skillsRes, chestsRes] = await Promise.all([
-          fetch(`http://localhost:8000/skills/tree`, { credentials: "include" }),
-          fetch(`http://localhost:8000/chests`, { credentials: "include" })
+          fetch(`${API_BASE}/skills/tree`, { credentials: "include" }),
+          fetch(`${API_BASE}/chests`, { credentials: "include" })
         ]);
 
         if (skillsRes.ok) {

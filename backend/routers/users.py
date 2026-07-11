@@ -24,6 +24,32 @@ router = APIRouter(prefix="/users", tags=["users"])
 
 async def fetch_user_progress(db: AsyncSession, current_user: User) -> UserProgressResponse:
     """Load a user's headline stats and their leaderboard rank."""
+    import datetime
+    
+    # Heart regeneration logic
+    now = datetime.datetime.utcnow()
+    updated_at = datetime.datetime.fromisoformat(current_user.hearts_updated_at) if current_user.hearts_updated_at else now
+
+    if current_user.hearts < 5:
+        delta_seconds = (now - updated_at).total_seconds()
+        seconds_per_heart = 5 * 3600
+        
+        if delta_seconds >= seconds_per_heart:
+            hearts_to_add = int(delta_seconds // seconds_per_heart)
+            current_user.hearts = min(current_user.hearts + hearts_to_add, 5)
+            if current_user.hearts >= 5:
+                current_user.hearts_updated_at = now.isoformat()
+            else:
+                new_updated = updated_at + datetime.timedelta(seconds=hearts_to_add * seconds_per_heart)
+                current_user.hearts_updated_at = new_updated.isoformat()
+            await db.commit()
+
+    next_heart_in_seconds = None
+    if current_user.hearts < 5:
+        updated_at = datetime.datetime.fromisoformat(current_user.hearts_updated_at) if current_user.hearts_updated_at else now
+        elapsed = (datetime.datetime.utcnow() - updated_at).total_seconds()
+        next_heart_in_seconds = int((5 * 3600) - elapsed)
+
     rank = None
     if current_user.xp > 0:
         result = await db.execute(
@@ -44,6 +70,8 @@ async def fetch_user_progress(db: AsyncSession, current_user: User) -> UserProgr
         hearts=current_user.hearts,
         last_active=current_user.last_active,
         rank=rank,
+        next_heart_in_seconds=next_heart_in_seconds,
+        hearts_updated_at=current_user.hearts_updated_at,
     )
 
 

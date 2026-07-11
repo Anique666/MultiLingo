@@ -56,6 +56,16 @@
     color: var(--color-foreground);
     font-family: var(--font-sans);
   }
+
+  .dark {
+    --color-background: #131F24;
+    --color-foreground: #FFFFFF;
+    --color-surface: #202F36;
+    --color-surface-alt: #18252B;
+    --color-border: #37464F;
+    --color-muted: #778B96;
+    --color-disabled: #4A5B64;
+  }
 }
 
 @layer components {

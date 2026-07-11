@@ -18,8 +18,9 @@ import {
 import ProtectedRoute from "@/app/components/ProtectedRoute";
 import { useAuth } from "@/app/context/AuthContext";
 import { Flame } from "lucide-react";
+import LoadingScreen from "@/app/components/LoadingScreen";
 
-const API_BASE = "http://localhost:8000";
+import { API_BASE } from "@/app/lib/api";
 
 function PracticePageContent() {
     const { exercises, currentIndex, status, practiceStreak } = useLesson();
@@ -27,7 +28,7 @@ function PracticePageContent() {
 
     // We should render the streak at the top
     return (
-        <div className="flex min-h-screen flex-col bg-white pb-32">
+        <div className="flex min-h-screen flex-col bg-background pb-32">
             <div className="mx-auto flex w-full max-w-5xl items-center justify-between p-4 px-6 pt-6">
                 <ProgressBar />
                 <div className="ml-4 flex items-center gap-2 rounded-full border-2 border-brand-orange/20 bg-brand-orange/10 px-4 py-2 font-extrabold text-brand-orange shadow-sm">
@@ -107,20 +108,16 @@ export default function PracticePage() {
     }, [user]);
 
     if (isLoading) {
-        return (
-            <div className="flex min-h-screen items-center justify-center bg-white p-4">
-                <p className="text-xl font-extrabold text-gray-500">Loading practice...</p>
-            </div>
-        );
+        return <LoadingScreen message="Loading practice..." />;
     }
 
     if (errorMessage !== null || initialExercise === null || initialStats === null) {
         return (
-            <div className="flex min-h-screen items-center justify-center bg-white p-4 text-center">
+            <div className="flex min-h-screen items-center justify-center bg-background p-4 text-center">
                 <div className="flex max-w-md flex-col gap-3">
-                    <h1 className="text-2xl font-extrabold text-gray-800">Could not start practice</h1>
+                    <h1 className="text-2xl font-extrabold text-foreground">Could not start practice</h1>
                     {errorMessage !== null ? (
-                        <p className="break-words text-sm font-bold text-gray-400">{errorMessage}</p>
+                        <p className="break-words text-sm font-bold text-muted">{errorMessage}</p>
                     ) : null}
                 </div>
             </div>

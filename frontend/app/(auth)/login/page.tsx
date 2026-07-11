@@ -48,8 +48,8 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="flex min-h-screen max-w-sm mx-auto flex-col justify-center px-4 bg-white">
-            <div className="mb-8 text-center text-3xl font-extrabold text-gray-800">
+        <div className="flex min-h-screen max-w-sm mx-auto flex-col justify-center px-4 bg-background">
+            <div className="mb-8 text-center text-3xl font-extrabold text-foreground">
                 Log in to continue
             </div>
 
@@ -65,7 +65,7 @@ export default function LoginPage() {
                     placeholder="Email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="h-12 rounded-2xl border-2 border-border bg-surface-alt px-4 font-bold text-gray-700 outline-none focus:border-brand-blue"
+                    className="h-12 rounded-2xl border-2 border-border bg-surface-alt px-4 font-bold text-foreground outline-none focus:border-brand-blue"
                     required
                 />
                 <input
@@ -73,7 +73,7 @@ export default function LoginPage() {
                     placeholder="Password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="h-12 rounded-2xl border-2 border-border bg-surface-alt px-4 font-bold text-gray-700 outline-none focus:border-brand-blue"
+                    className="h-12 rounded-2xl border-2 border-border bg-surface-alt px-4 font-bold text-foreground outline-none focus:border-brand-blue"
                     required
                 />
 
@@ -81,15 +81,15 @@ export default function LoginPage() {
                     type="submit"
                     disabled={isSubmitting}
                     className={`btn-tactile mt-2 flex h-14 w-full items-center justify-center rounded-2xl border-brand-green-dark bg-brand-green text-lg font-black uppercase tracking-widest text-white shadow-sm transition-all hover:brightness-105 ${isSubmitting
-                            ? "translate-y-1 border-b-0 opacity-80 shadow-none"
-                            : "border-b-4 active:translate-y-1 active:border-b-0 active:shadow-none"
+                        ? "translate-y-1 border-b-0 opacity-80 shadow-none"
+                        : "border-b-4 active:translate-y-1 active:border-b-0 active:shadow-none"
                         }`}
                 >
                     {isSubmitting ? "LOGGING IN..." : "LOG IN"}
                 </button>
             </form>
 
-            <div className="mt-8 text-center font-bold text-gray-500">
+            <div className="mt-8 text-center font-bold text-muted">
                 Don&apos;t have an account?{" "}
                 <Link href="/signup" className="text-brand-blue hover:underline">
                     Sign up

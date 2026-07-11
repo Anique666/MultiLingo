@@ -17,7 +17,7 @@ from models import User
 ACCESS_TOKEN_EXPIRE_HOURS = 24
 ACCESS_TOKEN_COOKIE_NAME = "access_token"
 JWT_ALGORITHM = "HS256"
-JWT_SECRET_KEY = os.getenv("DUO_JWT_SECRET", "dev-secret-key-change-me")
+JWT_SECRET_KEY = os.getenv("JWT_SECRET", "dev-secret-key-change-me")
 
 pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 

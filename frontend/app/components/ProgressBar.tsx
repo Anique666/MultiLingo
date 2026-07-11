@@ -23,7 +23,7 @@ export default function ProgressBar() {
             type="button"
             onClick={() => setShowQuitModal(true)}
             aria-label="Close lesson"
-            className="text-gray-400 transition-colors hover:text-gray-600"
+            className="text-muted transition-colors hover:text-foreground"
           >
             <X aria-hidden="true" className="size-7" />
           </button>
@@ -32,7 +32,7 @@ export default function ProgressBar() {
             type="button"
             onClick={toggleMute}
             aria-label={isMuted ? "Unmute sounds" : "Mute sounds"}
-            className="text-gray-400 transition-colors hover:text-gray-600"
+            className="text-muted transition-colors hover:text-foreground"
           >
             {isMuted ? (
               <VolumeX aria-hidden="true" className="size-7" />
@@ -43,7 +43,7 @@ export default function ProgressBar() {
         </div>
 
         <div className="flex-1">
-          <div className="h-4 w-full overflow-hidden rounded-full bg-gray-200">
+          <div className="h-4 w-full overflow-hidden rounded-full bg-border">
             <div
               className="h-full rounded-full bg-brand-green transition-all duration-500 ease-out"
               style={{ width: `${progressPercentage}%` }}

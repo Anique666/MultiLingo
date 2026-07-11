@@ -312,6 +312,8 @@ class UserProgressResponse(BaseModel):
     hearts: int = Field(..., ge=0)
     last_active: Optional[str] = None
     rank: Optional[int] = None
+    next_heart_in_seconds: Optional[int] = None
+    hearts_updated_at: Optional[str] = None
 
 # ===========================================================================
 # Chests

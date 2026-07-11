@@ -40,14 +40,14 @@ export default function LandingPage() {
   /* While checking auth, show nothing */
   if (isLoading || user) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-white">
+      <div className="flex min-h-screen items-center justify-center bg-background">
         <OwlMascot className="size-20 animate-pulse" />
       </div>
     );
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-white">
+    <div className="flex min-h-screen flex-col bg-background">
       {/* ───── TOP BAR ───── */}
       <header className="flex h-16 shrink-0 items-center justify-between border-b border-border px-5 md:px-10">
         {/* Wordmark */}
@@ -132,7 +132,7 @@ export default function LandingPage() {
             {LANGUAGES.map(({ flag, label }) => (
               <div
                 key={label}
-                className="flex shrink-0 items-center gap-2 rounded-xl px-3 py-2 text-sm font-extrabold uppercase tracking-wide text-foreground/80 transition hover:bg-white"
+                className="flex shrink-0 items-center gap-2 rounded-xl px-3 py-2 text-sm font-extrabold uppercase tracking-wide text-foreground/80 transition hover:bg-surface-alt"
               >
                 <span className="text-xl leading-none">{flag}</span>
                 <span>{label}</span>

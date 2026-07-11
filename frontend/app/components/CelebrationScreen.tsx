@@ -19,7 +19,7 @@ export default function CelebrationScreen() {
   const xpEarned = correctCount * 10;
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col items-center justify-between bg-white p-6">
+    <div className="fixed inset-0 z-50 flex flex-col items-center justify-between bg-background p-6">
       <div />
 
       <section className="flex flex-col items-center">
@@ -32,16 +32,16 @@ export default function CelebrationScreen() {
         </h1>
 
         <div className="mt-10 grid grid-cols-2 gap-4">
-          <div className="flex w-32 flex-col items-center rounded-2xl border-2 border-gray-200 p-4">
-            <p className="text-sm font-extrabold text-gray-500">Total XP</p>
-            <p className="mt-2 text-xl font-extrabold text-gray-800">
+          <div className="flex w-32 flex-col items-center rounded-2xl border-2 border-border p-4">
+            <p className="text-sm font-extrabold text-muted">Total XP</p>
+            <p className="mt-2 text-xl font-extrabold text-brand-yellow">
               {xpEarned}
             </p>
           </div>
 
-          <div className="flex w-32 flex-col items-center rounded-2xl border-2 border-gray-200 p-4">
-            <p className="text-sm font-extrabold text-gray-500">Accuracy</p>
-            <p className="mt-2 text-xl font-extrabold text-gray-800">
+          <div className="flex w-32 flex-col items-center rounded-2xl border-2 border-border p-4">
+            <p className="text-sm font-extrabold text-muted">Accuracy</p>
+            <p className="mt-2 text-xl font-extrabold text-brand-green">
               {accuracy}%
             </p>
           </div>

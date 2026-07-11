@@ -5,6 +5,7 @@ Lifespan handler creates all tables on startup (idempotent via
 create_all). Routers are registered here.
 """
 
+import os
 from contextlib import asynccontextmanager
 from typing import AsyncIterator
 import sys
@@ -125,7 +126,9 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 
-    await seed_dev_data()
+    # Only auto-seed in development — production should use reseed.py manually
+    if os.getenv("ENV") != "production":
+        await seed_dev_data()
     yield
 
 
@@ -136,9 +139,17 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+# ---------------------------------------------------------------------------
+# CORS — allow the deployed frontend + localhost for dev
+# ---------------------------------------------------------------------------
+_frontend_url = os.getenv("FRONTEND_URL", "")
+_allowed_origins = ["http://localhost:3000", "http://127.0.0.1:3000"]
+if _frontend_url:
+    _allowed_origins.append(_frontend_url)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_origins=_allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -157,4 +168,3 @@ app.include_router(users.router)
 app.include_router(leaderboard.router)
 app.include_router(chests.router)
 app.include_router(practice.router)
-

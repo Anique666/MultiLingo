@@ -28,7 +28,7 @@ export default function MultipleChoice() {
         {exercise.question}
       </h1>
 
-      <div className="grid grid-cols-1 gap-4">
+      <div className="flex h-full w-full flex-col p-4 text-foreground">
         {exercise.options.map((option) => {
           const isSelected = selected === option;
 
@@ -44,7 +44,7 @@ export default function MultipleChoice() {
                 "btn-tactile w-full rounded-2xl border-2 p-4 text-left text-lg font-bold transition-colors",
                 isSelected
                   ? "border-brand-blue border-b-brand-blue bg-brand-blue-bg text-brand-blue"
-                  : "border-gray-200 bg-white text-gray-700",
+                  : "border-border bg-surface text-foreground",
               ].join(" ")}
             >
               {option}

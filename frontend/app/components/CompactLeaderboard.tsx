@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useAuth } from "../context/AuthContext";
+import { API_BASE } from "@/app/lib/api";
 
 type LeaderboardEntry = {
   id: number;
@@ -25,7 +26,7 @@ export default function CompactLeaderboard() {
         let currentXp = 0;
         let currentRank = null;
         try {
-          const progressRes = await fetch("http://localhost:8000/users/progress", {
+          const progressRes = await fetch(`${API_BASE}/users/progress`, {
             credentials: "include",
             signal: controller.signal,
           });
@@ -41,7 +42,7 @@ export default function CompactLeaderboard() {
         setUserRank(currentRank);
 
         if (currentXp > 0) {
-          const response = await fetch("http://localhost:8000/leaderboard", {
+          const response = await fetch(`${API_BASE}/leaderboard`, {
             signal: controller.signal,
           });
 

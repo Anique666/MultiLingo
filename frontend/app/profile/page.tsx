@@ -4,14 +4,19 @@ import TopBar from "../components/TopBar";
 import Sidebar from "../components/Sidebar";
 import ProtectedRoute from "../components/ProtectedRoute";
 import { useAuth, API_BASE } from "../context/AuthContext";
-import { Flame, Zap, Shield, Medal, Lock, Search, UserPlus } from "lucide-react";
-import { useState } from "react";
+import { Flame, Zap, Shield, Medal, Lock, Search, UserPlus, Sun, Moon } from "lucide-react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
+import { useTheme } from "../context/ThemeContext";
 
 export default function ProfilePage() {
     const { user } = useAuth();
+    const { theme, toggleTheme } = useTheme();
     const [showResetModal, setShowResetModal] = useState(false);
     const [isResetting, setIsResetting] = useState(false);
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => setMounted(true), []);
 
     if (!user) return null;
 
@@ -43,7 +48,7 @@ export default function ProfilePage() {
 
     return (
         <ProtectedRoute>
-            <div className="min-h-screen bg-white">
+            <div className="min-h-screen bg-background">
                 <TopBar />
                 <Sidebar />
                 <main className="w-full pb-10 pt-24 lg:pl-[16rem]">
@@ -67,9 +72,20 @@ export default function ProfilePage() {
                                             <span>0 Followers</span>
                                         </div>
                                     </div>
-                                    <div className="w-10 h-8 rounded shrink-0 overflow-hidden border-2 border-border mt-2">
-                                        {/* A placeholder for the Flag icon */}
-                                        <div className="w-full h-full bg-gradient-to-b from-black via-red-500 to-yellow-500"></div>
+                                    <div className="flex flex-col items-end gap-2 mt-2 shrink-0">
+                                        <div className="w-10 h-8 rounded overflow-hidden border-2 border-border">
+                                            {/* A placeholder for the Flag icon */}
+                                            <div className="w-full h-full bg-gradient-to-b from-black via-red-500 to-yellow-500"></div>
+                                        </div>
+                                        {mounted && (
+                                            <button
+                                                onClick={toggleTheme}
+                                                className="p-2 rounded-xl border-2 border-border text-muted hover:bg-surface-alt transition-colors"
+                                                aria-label="Toggle Dark Mode"
+                                            >
+                                                {theme === "dark" ? <Sun size={20} /> : <Moon size={20} />}
+                                            </button>
+                                        )}
                                     </div>
                                 </div>
                             </div>
@@ -102,7 +118,7 @@ export default function ProfilePage() {
                                         </div>
                                     </div>
                                     <div className="flex bg-surface border-2 border-border rounded-[1rem] p-4 gap-4 items-center opacity-70">
-                                        <Medal className="text-gray-400 shrink-0 fill-gray-200" size={32} />
+                                        <Medal className="text-muted shrink-0 fill-[var(--color-disabled)]" size={32} />
                                         <div>
                                             <div className="font-bold text-lg">0</div>
                                             <div className="text-[var(--color-muted)] text-sm">Top 3 finishes</div>

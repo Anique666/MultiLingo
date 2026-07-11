@@ -13,10 +13,10 @@ export default function QuitConfirmationModal({
 }: QuitConfirmationModalProps) {
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
-            <div className="flex w-full max-w-md flex-col items-center gap-6 rounded-3xl bg-white p-8 pb-6 text-center shadow-2xl">
+            <div className="flex w-full max-w-md flex-col items-center gap-6 rounded-3xl bg-surface p-8 pb-6 text-center shadow-2xl">
                 <div className="relative mb-2 mt-4 size-32">
                     {/* Shadow under owl */}
-                    <div className="absolute -bottom-2 left-1/2 h-3 w-28 -translate-x-1/2 rounded-[100%] bg-gray-200" />
+                    <div className="absolute -bottom-2 left-1/2 h-3 w-28 -translate-x-1/2 rounded-[100%] bg-disabled" />
 
                     <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" className="absolute inset-0 size-full drop-shadow-sm">
                         {/* Body */}
@@ -73,7 +73,7 @@ export default function QuitConfirmationModal({
                     <button
                         type="button"
                         onClick={onConfirm}
-                        className="flex w-full items-center justify-center py-3 text-[15px] font-extrabold tracking-[0.05em] text-[#FF4B4B] uppercase transition-colors hover:bg-gray-100 rounded-2xl"
+                        className="flex w-full items-center justify-center py-3 text-[15px] font-extrabold tracking-[0.05em] text-[#FF4B4B] uppercase transition-colors hover:bg-surface-alt rounded-2xl"
                     >
                         END SESSION
                     </button>

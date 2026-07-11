@@ -31,12 +31,12 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="fixed left-0 top-0 hidden h-screen w-full flex-col border-r-2 border-border bg-white px-4 lg:flex lg:w-[16rem] z-50">
+    <aside className="fixed left-0 top-0 hidden h-screen w-full flex-col border-r-2 border-border bg-background px-4 lg:flex lg:w-[16rem] z-50">
       {/* Brand / Logo Area */}
       <div className="mb-8 flex items-center gap-3 px-4 pt-4">
         <OwlMascot className="size-8" />
         <span className="text-[26px] font-black tracking-tighter text-[#58cc02]">
-          duolingo
+          multilingo
         </span>
       </div>
 

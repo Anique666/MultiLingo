@@ -138,16 +138,16 @@ export default function Matching() {
     return [
       "btn-tactile min-h-16 w-full rounded-2xl border-2 p-4 text-center text-lg font-bold",
       isMatchedItem
-        ? "border-gray-200 bg-gray-100 text-gray-400"
+        ? "border-border bg-surface-alt text-muted"
         : isSelected
           ? "border-brand-blue border-b-brand-blue bg-brand-blue-bg text-brand-blue"
-          : "border-gray-200 bg-white text-gray-700",
+          : "border-border bg-surface text-foreground",
     ].join(" ");
   }
 
   return (
     <section className="mx-auto flex w-full max-w-2xl flex-col gap-6">
-      <h1 className="text-2xl font-extrabold text-gray-800">
+      <h1 className="mb-4 text-2xl font-extrabold text-foreground">
         {exercise.question}
       </h1>
 

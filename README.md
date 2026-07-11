@@ -1,1 +1,1 @@
-Duolingo Clone
+MultiLingo Clone

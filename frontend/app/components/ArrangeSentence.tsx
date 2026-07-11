@@ -53,8 +53,8 @@ export default function ArrangeSentence() {
   }
 
   return (
-    <section className="mx-auto flex w-full max-w-2xl flex-col gap-8">
-      <h1 className="text-2xl font-extrabold text-gray-800">
+    <div className="flex h-full w-full flex-col p-4 text-foreground">
+      <h1 className="mb-6 text-2xl font-extrabold">
         {exercise.question}
       </h1>
 
@@ -67,7 +67,7 @@ export default function ArrangeSentence() {
             onClick={() => {
               handleDeselect(word);
             }}
-            className="btn-tactile rounded-xl border-2 border-gray-200 bg-white px-4 py-2 font-bold text-gray-700"
+            className="btn-tactile rounded-xl border-2 border-border bg-surface px-4 py-2 font-bold text-foreground"
           >
             {word}
           </button>
@@ -83,7 +83,7 @@ export default function ArrangeSentence() {
             onClick={() => {
               handleSelect(word);
             }}
-            className="btn-tactile rounded-xl border-2 border-gray-200 bg-white px-4 py-2 font-bold text-gray-700"
+            className="btn-tactile rounded-xl border-2 border-border bg-surface px-4 py-2 font-bold text-foreground"
           >
             {word}
           </button>
@@ -100,6 +100,6 @@ export default function ArrangeSentence() {
       >
         Check Answer
       </button>
-    </section>
+    </div>
   );
 }

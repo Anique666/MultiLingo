@@ -16,6 +16,7 @@ class User(Base):
     hearts = Column(Integer, default=5)
     last_active = Column(String) # Simple ISO string for streak calculation
     created_at = Column(String, default=lambda: datetime.datetime.utcnow().isoformat())
+    hearts_updated_at = Column(String, default=lambda: datetime.datetime.utcnow().isoformat())
 
 class Unit(Base):
     __tablename__ = "units"

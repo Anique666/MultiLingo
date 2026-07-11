@@ -14,7 +14,7 @@ import { playAudioFeedback } from "../utils/audio";
 // Constants
 // ---------------------------------------------------------------------------
 
-const API_BASE = "http://localhost:8000";
+import { API_BASE } from "@/app/lib/api";
 
 // ---------------------------------------------------------------------------
 // Types

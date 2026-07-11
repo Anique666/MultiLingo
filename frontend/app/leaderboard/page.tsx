@@ -7,6 +7,7 @@ import ProtectedRoute from "../components/ProtectedRoute";
 import { Gem } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { useEffect, useState } from "react";
+import { API_BASE } from "@/app/lib/api";
 
 type LeaderboardEntry = {
     id: number;
@@ -27,7 +28,7 @@ export default function LeaderboardPage() {
             try {
                 let currentXp = 0;
                 try {
-                    const progressRes = await fetch("http://localhost:8000/users/progress", {
+                    const progressRes = await fetch(`${API_BASE}/users/progress`, {
                         credentials: "include",
                         signal: controller.signal,
                     });
@@ -41,7 +42,7 @@ export default function LeaderboardPage() {
                 setUserXp(currentXp);
 
                 if (currentXp > 0) {
-                    const response = await fetch("http://localhost:8000/leaderboard", {
+                    const response = await fetch(`${API_BASE}/leaderboard`, {
                         signal: controller.signal,
                     });
 
@@ -79,7 +80,7 @@ export default function LeaderboardPage() {
 
     return (
         <ProtectedRoute>
-            <div className="min-h-screen bg-white">
+            <div className="min-h-screen bg-background">
                 <TopBar />
                 <Sidebar />
                 <main className="w-full pb-10 pt-24 lg:pl-[16rem]">

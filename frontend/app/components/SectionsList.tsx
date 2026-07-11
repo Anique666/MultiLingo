@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ChevronLeft, Lock, Trophy } from "lucide-react";
 import OwlMascot from "./OwlMascot";
 import { useAuth } from "../context/AuthContext";
+import { API_BASE } from "@/app/lib/api";
 
 export default function SectionsList() {
     const { user } = useAuth();
@@ -15,7 +16,7 @@ export default function SectionsList() {
         let isMounted = true;
         async function fetchTree() {
             try {
-                const response = await fetch(`http://localhost:8000/skills/tree`, {
+                const response = await fetch(`${API_BASE}/skills/tree`, {
                     credentials: "include",
                 });
                 if (!response.ok) return;
@@ -74,7 +75,7 @@ export default function SectionsList() {
 
                         {/* Progress bar */}
                         <div className="mt-2 flex w-full max-w-[200px] items-center gap-3">
-                            <div className="relative h-4 flex-1 shrink-0 overflow-hidden rounded-full bg-white">
+                            <div className="relative h-4 flex-1 shrink-0 overflow-hidden rounded-full bg-surface-alt">
                                 <div
                                     className="ease-snappy h-full rounded-full bg-brand-green transition-all duration-500"
                                     style={{ width: `${percentage}%` }}
@@ -92,10 +93,10 @@ export default function SectionsList() {
                     {/* Right Side Illustration */}
                     <div className="relative ml-4 flex w-[140px] shrink-0 items-end justify-end pt-[30px]">
                         {/* Speech Bubble */}
-                        <div className="absolute right-[40px] top-[-10px] z-20 whitespace-nowrap rounded-2xl bg-white px-4 py-3 text-[15px] font-bold text-foreground shadow-sm">
-                            Ola!
+                        <div className="absolute right-[40px] top-[-10px] z-20 whitespace-nowrap rounded-2xl bg-surface px-4 py-3 text-[15px] font-bold text-foreground shadow-sm">
+                            ¡Hola!
                             {/* SVG pointer triangle */}
-                            <div className="absolute bottom-[-5px] right-[24px] h-3 w-3 rotate-45 transform bg-white" />
+                            <div className="absolute bottom-[-5px] right-[24px] h-3 w-3 rotate-45 transform bg-surface" />
                         </div>
                         <OwlMascot className="relative z-10 size-[110px] drop-shadow-md" />
                     </div>
@@ -113,11 +114,11 @@ export default function SectionsList() {
             </div>
 
             {/* Section 2 Card (Locked) */}
-            <div className="relative flex min-h-[220px] flex-col gap-4 rounded-[24px] border-2 border-border bg-white p-6 text-foreground opacity-90 shadow-sm">
+            <div className="relative flex min-h-[220px] flex-col gap-4 rounded-[24px] border-2 border-border bg-surface p-6 text-foreground opacity-90 shadow-sm">
                 <div className="z-10 flex w-full items-start justify-between">
                     <div className="flex flex-1 flex-col gap-2">
                         <span className="text-[13px] font-black uppercase tracking-[0.1em] text-muted">
-                            A1 • SEE DETAILS
+                            A2 • SEE DETAILS
                         </span>
                         <h1 className="text-[28px] font-black leading-tight tracking-tight text-foreground/80">
                             Section 2
@@ -132,9 +133,9 @@ export default function SectionsList() {
 
                     {/* Right Side Illustration */}
                     <div className="relative ml-4 flex w-[160px] shrink-0 items-end justify-end pt-[30px]">
-                        <div className="absolute right-[40px] top-[-20px] z-20 whitespace-nowrap rounded-2xl border-2 border-border bg-white px-4 py-3 text-[13px] font-bold text-muted shadow-sm">
-                            Aprenderé español.
-                            <div className="absolute bottom-[-6px] right-[24px] h-3 w-3 rotate-45 transform border-b-2 border-r-2 border-border bg-white" />
+                        <div className="absolute right-[40px] top-[-20px] z-20 whitespace-nowrap rounded-2xl border-2 border-border bg-surface px-4 py-3 text-[13px] font-bold text-muted shadow-sm">
+                            Quiero aprender español.
+                            <div className="absolute bottom-[-6px] right-[24px] h-3 w-3 rotate-45 transform border-b-2 border-r-2 border-border bg-surface" />
                         </div>
                         <OwlMascot className="relative z-10 size-[110px] opacity-80 drop-shadow-sm" />
                     </div>

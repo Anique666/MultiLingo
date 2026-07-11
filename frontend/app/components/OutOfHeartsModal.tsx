@@ -15,7 +15,7 @@ export default function OutOfHeartsModal() {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
-      <div className="flex w-full max-w-md flex-col items-center gap-6 rounded-3xl bg-white p-8 text-center shadow-2xl">
+      <div className="flex w-full max-w-md flex-col items-center gap-6 rounded-3xl bg-surface p-8 text-center shadow-2xl">
         <HeartCrack
           aria-hidden="true"
           className="size-20 fill-brand-red text-brand-red"

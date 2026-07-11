@@ -23,7 +23,7 @@ export default function FillBlank() {
 
   return (
     <section className="mx-auto flex w-full max-w-2xl flex-col gap-6">
-      <h1 className="text-2xl font-extrabold text-gray-800">
+      <h1 className="text-2xl font-extrabold text-foreground">
         {exercise.question}
       </h1>
 
@@ -34,7 +34,7 @@ export default function FillBlank() {
         onChange={(event) => {
           setText(event.target.value);
         }}
-        className="w-full rounded-2xl border-2 border-gray-200 p-4 text-xl font-bold text-gray-800 outline-none transition-colors focus:border-brand-blue disabled:bg-gray-50 disabled:text-gray-400"
+        className="w-full rounded-2xl border-2 border-border p-4 text-xl font-bold text-foreground outline-none transition-colors focus:border-brand-blue disabled:bg-surface-alt disabled:text-muted"
         autoComplete="off"
       />
 

@@ -49,8 +49,8 @@ export default function SignupPage() {
     };
 
     return (
-        <div className="flex min-h-screen max-w-sm mx-auto flex-col justify-center px-4 bg-white">
-            <div className="mb-8 text-center text-3xl font-extrabold text-gray-800">
+        <div className="flex min-h-screen max-w-sm mx-auto flex-col justify-center px-4 bg-background">
+            <div className="mb-8 text-center text-3xl font-extrabold text-foreground">
                 Create your profile
             </div>
 
@@ -66,7 +66,7 @@ export default function SignupPage() {
                     placeholder="Username"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    className="h-12 rounded-2xl border-2 border-border bg-surface-alt px-4 font-bold text-gray-700 outline-none focus:border-brand-blue"
+                    className="h-12 rounded-2xl border-2 border-border bg-surface-alt px-4 font-bold text-foreground outline-none focus:border-brand-blue"
                     required
                 />
                 <input
@@ -74,7 +74,7 @@ export default function SignupPage() {
                     placeholder="Email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="h-12 rounded-2xl border-2 border-border bg-surface-alt px-4 font-bold text-gray-700 outline-none focus:border-brand-blue"
+                    className="h-12 rounded-2xl border-2 border-border bg-surface-alt px-4 font-bold text-foreground outline-none focus:border-brand-blue"
                     required
                 />
                 <input
@@ -83,7 +83,7 @@ export default function SignupPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     minLength={8}
-                    className="h-12 rounded-2xl border-2 border-border bg-surface-alt px-4 font-bold text-gray-700 outline-none focus:border-brand-blue"
+                    className="h-12 rounded-2xl border-2 border-border bg-surface-alt px-4 font-bold text-foreground outline-none focus:border-brand-blue"
                     required
                 />
 
@@ -99,7 +99,7 @@ export default function SignupPage() {
                 </button>
             </form>
 
-            <div className="mt-8 text-center font-bold text-gray-500">
+            <div className="mt-8 text-center font-bold text-muted">
                 Already have an account?{" "}
                 <Link href="/login" className="text-brand-blue hover:underline">
                     Log in

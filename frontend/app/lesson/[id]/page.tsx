@@ -20,8 +20,9 @@ import {
 } from "@/context/LessonContext";
 import ProtectedRoute from "@/app/components/ProtectedRoute";
 import { useAuth } from "@/app/context/AuthContext";
+import LoadingScreen from "@/app/components/LoadingScreen";
 
-const API_BASE = "http://localhost:8000";
+import { API_BASE } from "@/app/lib/api";
 const REQUEST_TIMEOUT_MS = 8000;
 
 interface LessonResponse {
@@ -57,7 +58,7 @@ function LessonPageContent() {
   const exercise = exercises[currentIndex];
 
   return (
-    <div className="flex min-h-screen flex-col bg-white pb-32">
+    <div className="flex min-h-screen flex-col bg-background pb-32">
       <ProgressBar />
 
       <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col items-center justify-center p-4 md:flex-row md:items-start md:gap-8 md:pt-12">
@@ -148,28 +149,21 @@ export default function LessonPage() {
   }, [lessonId, user]);
 
   if (isLoading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-white p-4">
-        <p className="text-xl font-extrabold text-gray-500">
-          Loading your lesson...
-        </p>
-      </div>
-    );
+    return <LoadingScreen message="Loading your lesson..." />;
   }
 
   if (errorMessage !== null || lesson === null || initialHearts === null) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-white p-4 text-center">
+      <div className="flex min-h-screen items-center justify-center bg-background p-4 text-center">
         <div className="flex max-w-md flex-col gap-3">
-          <h1 className="text-2xl font-extrabold text-gray-800">
+          <h1 className="text-2xl font-extrabold text-foreground">
             Could not load this lesson
           </h1>
-          <p className="font-bold text-gray-500">
-            Make sure the FastAPI backend is running on
-            {" "}http://localhost:8000.
+          <p className="font-bold text-muted">
+            Make sure the backend API is running.
           </p>
           {errorMessage !== null ? (
-            <p className="break-words text-sm font-bold text-gray-400">
+            <p className="break-words text-sm font-bold text-muted">
               {errorMessage}
             </p>
           ) : null}

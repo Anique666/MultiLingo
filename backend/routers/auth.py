@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import os
+
 from fastapi import APIRouter, Depends, HTTPException, Response, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -24,6 +26,8 @@ from security import (
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
+_IS_PROD = os.getenv("ENV") == "production"
+
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -36,8 +40,8 @@ def _set_session_cookie(response: Response, user_id: int) -> None:
         key=ACCESS_TOKEN_COOKIE_NAME,
         value=token,
         httponly=True,
-        secure=False,       # True in production behind HTTPS
-        samesite="lax",
+        secure=_IS_PROD,
+        samesite="none" if _IS_PROD else "lax",
         max_age=60 * 60 * 24,  # 24 hours
         path="/",
     )
@@ -162,9 +166,9 @@ async def logout(response: Response) -> Response:
     response.delete_cookie(
         key=ACCESS_TOKEN_COOKIE_NAME,
         path="/",
-        secure=False,
+        secure=_IS_PROD,
         httponly=True,
-        samesite="lax",
+        samesite="none" if _IS_PROD else "lax",
     )
     response.status_code = status.HTTP_204_NO_CONTENT
     return response

@@ -1,8 +1,10 @@
 """
 database.py — Async SQLAlchemy engine, session factory, and FastAPI dependency.
 
-Driver: aiosqlite (non-blocking SQLite via asyncio)
+Supports both SQLite (local dev) and PostgreSQL (production via DATABASE_URL).
 """
+
+import os
 
 from sqlalchemy.ext.asyncio import (
     AsyncSession,
@@ -16,21 +18,30 @@ from sqlalchemy.pool import NullPool
 # ---------------------------------------------------------------------------
 # Database URL
 # ---------------------------------------------------------------------------
-DATABASE_URL = "sqlite+aiosqlite:///./multilingo.db"
+# Render provides postgres:// but SQLAlchemy's async engine needs
+# postgresql+asyncpg://. Rewrite the scheme automatically.
+_raw_url = os.getenv("DATABASE_URL", "sqlite+aiosqlite:///./multilingo.db")
+
+if _raw_url.startswith("postgres://"):
+    _raw_url = _raw_url.replace("postgres://", "postgresql+asyncpg://", 1)
+elif _raw_url.startswith("postgresql://"):
+    _raw_url = _raw_url.replace("postgresql://", "postgresql+asyncpg://", 1)
+
+DATABASE_URL = _raw_url
+_is_sqlite = DATABASE_URL.startswith("sqlite")
 
 # ---------------------------------------------------------------------------
 # Engine
-# NullPool is the recommended pool class for SQLite+aiosqlite in async mode.
-# It creates a fresh connection per operation and closes it immediately,
-# preventing the connection-pool deadlocks that arise when the lifespan
-# handler holds connections while request handlers try to acquire new ones.
 # ---------------------------------------------------------------------------
-engine: AsyncEngine = create_async_engine(
-    DATABASE_URL,
-    echo=False,
-    connect_args={"check_same_thread": False},
-    poolclass=NullPool,
-)
+# SQLite needs NullPool and check_same_thread=False.
+# Postgres uses the default QueuePool — no special connect_args needed.
+_engine_kwargs: dict = {"echo": False}
+
+if _is_sqlite:
+    _engine_kwargs["connect_args"] = {"check_same_thread": False}
+    _engine_kwargs["poolclass"] = NullPool
+
+engine: AsyncEngine = create_async_engine(DATABASE_URL, **_engine_kwargs)
 
 # ---------------------------------------------------------------------------
 # Session factory
